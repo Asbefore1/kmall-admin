@@ -25,7 +25,8 @@ module.exports={
 	//配置别名
 	resolve:{
 		alias:{
-			pages:path.resolve(__dirname,'./src/pages')
+			pages:path.resolve(__dirname,'./src/pages'),
+			util:path.resolve(__dirname,'./src/util')
 		}
 	},
 	//配置loader

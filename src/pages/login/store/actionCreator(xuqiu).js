@@ -1,5 +1,6 @@
-import axios from 'axios';//发送ajax请求
+
 import { message } from 'antd';
+import { request } from 'util/ajax.js';
 import * as types from './actionTypes.js';
 
 const getLoginRequestAction=()=>{
@@ -18,7 +19,7 @@ export const getLoginAction=(values)=>{
 	return (dispatch)=>{//派送时又返回了一个dispatch
 		//发送了请求之后就不再转圈	  
 	    dispatch(getLoginRequestAction())  	
-	    axios({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
+	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
 	      	method: 'post',
 			url: 'http://127.0.0.1:3001/admin/login',
 			data: values
