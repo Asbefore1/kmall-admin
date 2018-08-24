@@ -1,7 +1,7 @@
 //入口文件
 
 //引入reducer和store,中间件
-import reducer from './reducer.js' ;
+import reducer from './hebing-reducer.js' ;
 
 import { createStore,applyMiddleware  } from 'redux';
 

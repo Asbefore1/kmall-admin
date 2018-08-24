@@ -1,6 +1,8 @@
 import React,{ Component } from 'react';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import './index.css';
+import { Form, Icon, Input, Button,message } from 'antd';
+import './zujian.css';
+import { connect } from 'react-redux';
+import { actionCreator } from './store/center.js';
 const FormItem = Form.Item;
 const axios = require('axios');
 
@@ -8,27 +10,18 @@ class NormalLoginForm extends React.Component {
 	constructor(props){
 		super(props);
 		this.handleSubmit=this.handleSubmit.bind(this)
+		this.state={
+			isFetching:true
+		}
 	}
-	handleSubmit (e){
-	  e.preventDefault();//阻止默认行为就会往下走
-	  this.props.form.validateFields((err, values) => {
-	    if (!err) {
-	      axios({
-	      	method: 'get',
-				  url: 'http://127.0.0.1:3001/admin/login',
-				  data: {
-				    firstName: 'Fred',
-				    lastName: 'Flintstone'
-				  }
-	      })
-	      .then((data)=>{
-	      	console.log(data)
-	      })
-	      .catch((err)=>{
-	      	console.log(err)
-	      })
-	    }
-	  })
+	handleSubmit(e){
+	 	e.preventDefault();//阻止默认行为
+	  	this.props.form.validateFields((err, values) => {
+		    // console.log(values)//values是用户名和密码
+		    if (!err) {	
+			    this.props.handleLogin(values)	     
+		    }
+		})
 	}
 	render(){
 	  const { getFieldDecorator } = this.props.form;
@@ -54,9 +47,31 @@ class NormalLoginForm extends React.Component {
 		        	type="primary" 
 		        	onClick={this.handleSubmit} 
 		        	className="login-form-button"
-		        	loading='false'
+		        	loading={this.props.isFetching}//点击让登录转圈
 		        >
 		       	登录
 		        </Button>     
 		      </FormItem>
-		   
+		    </Form>
+		  </div>
+	  )
+	}
+}
+const Login =Form.create()(NormalLoginForm);
+
+const mapStateToProps=(state)=>{
+	return{
+		isFetching:state.get('login').get('isFetching')
+	}
+}
+//映射
+const mapDispatchToProps=(dispatch)=>{
+	return {
+		handleLogin:(values)=>{
+			const action=actionCreator.getLoginAction(values);
+			dispatch(action)
+		}
+	}
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Login);

@@ -2,7 +2,7 @@ import React,{ Component } from 'react';
 //引入css
 import './App.css';
 
-import NormalLoginForm from './pages/login';
+import Login from './pages/login/zujian.js';
 
 import {
   BrowserRouter as Router,
@@ -18,7 +18,7 @@ class App extends Component{
 		return(
 			<Router>{/*只包含一个*/}	
 				<div className='App'>													
-					<Route path="/login" component={ NormalLoginForm } />	
+					<Route path="/login" component={ Login } />	
 				</div>						
 			</Router>
 		)

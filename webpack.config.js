@@ -22,6 +22,12 @@ module.exports={
 		path:path.resolve(__dirname,'dist'),
 		publicPath:publicPath
 	},
+	//配置别名
+	resolve:{
+		alias:{
+			pages:path.resolve(__dirname,'./src/pages')
+		}
+	},
 	//配置loader
 	module: {
 	    rules: [
