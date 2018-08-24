@@ -1,0 +1,11 @@
+.Todolist{
+	margin-top: 100px;
+	margin-left: 300px;
+}
+
+.Todolist li{
+	width: 300px;
+	margin-top: 20px;
+	list-style: none;
+	border-bottom: 1px dashed #000;
+}
