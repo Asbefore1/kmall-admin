@@ -68,6 +68,7 @@ const mapStateToProps=(state)=>{
 const mapDispatchToProps=(dispatch)=>{
 	return {
 		handleLogin:(values)=>{
+			// console.log(values)
 			const action=actionCreator.getLoginAction(values);
 			dispatch(action)
 		}

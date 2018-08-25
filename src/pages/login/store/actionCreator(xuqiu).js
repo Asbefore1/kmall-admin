@@ -1,6 +1,7 @@
 
 import { message } from 'antd';
-import { request } from 'util/ajax.js';
+import { request,storageUserName } from 'util/ajax.js';
+import { ADMIN_LOGIN } from 'api/jiekou.js';
 import * as types from './actionTypes.js';
 
 const getLoginRequestAction=()=>{
@@ -21,16 +22,17 @@ export const getLoginAction=(values)=>{
 	    dispatch(getLoginRequestAction())  	
 	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
 	      	method: 'post',
-			url: 'http://127.0.0.1:3001/admin/login',
+			url: ADMIN_LOGIN,
 			data: values
 	    })
-	    .then((result)=>{//发送成功从后端接收到数据result(code:0,errmessage:'',data: { username: 'admin' })
-	      	// console.log(result)//{data: {…}, status: 200, statusText: "OK", headers: {…}, config: {…}, …}整个结果是result
-	      	let data=result.data;
-	      	if(data.code==0){
+	    .then((result)=>{//发送成功从后端接收到数据data
+	      	// console.log(result)//{code: 0, errmessage: "", data: {…}}
+	      	if(result.code==0){//等于0时发送ajax成功,并且成功找到数据
+	      		//在浏览器中存储用户信息
+	      		storageUserName(result.data.username)
 	      		window.location.href='/'
-	      	}else if(data.code==10){
-	      		message.error(data.errmessage)
+	      	}else if(result.code==1){//等于1时发送ajax成功,但没找到数据
+	      		message.error(result.errmessage)
 	      	}
 	      	//请求完成后就不再转圈(不一定成功但不再转圈了)       
 		    dispatch(getLoginDoneAction())

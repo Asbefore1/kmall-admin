@@ -24,9 +24,10 @@ module.exports={
 	},
 	//配置别名
 	resolve:{
-		alias:{
+		alias:{//绝对路径+/src/pages从现在这个文件夹下走到src里面再往下走
 			pages:path.resolve(__dirname,'./src/pages'),
-			util:path.resolve(__dirname,'./src/util')
+			util:path.resolve(__dirname,'./src/util'),
+			api:path.resolve(__dirname,'./src/api')
 		}
 	},
 	//配置loader
