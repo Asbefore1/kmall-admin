@@ -8,7 +8,6 @@ import { reducer as loginReducer } from 'pages/login/store/center.js';
 import { reducer as homeReducer } from 'pages/home/store/center.js';
 
 export default combineReducers({//导出reducer
-	//又把todolistReducer名字换成todolist,将其导出
 	login:loginReducer,
 	home:homeReducer
 })

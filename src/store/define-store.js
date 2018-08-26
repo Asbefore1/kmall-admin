@@ -1,6 +1,6 @@
-//入口文件
+//入口文件(定义文件)
 
-//引入reducer和store,中间件
+//引入reducer,中间件
 import reducer from './hebing-reducer.js' ;
 
 import { createStore,applyMiddleware  } from 'redux';

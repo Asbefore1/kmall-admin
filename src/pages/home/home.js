@@ -1,6 +1,7 @@
 import React,{ Component } from 'react';
 import { getUserName } from 'util/ajax.js';
 import MyLayout from '../../common/layout/layout.js';
+//映射
 import { connect } from 'react-redux';
 import { actionCreator } from './store/center.js';
 
@@ -20,7 +21,6 @@ class Home extends Component{
 
 	render(){
 		return(
-
 			<div className='Home'>
 				{ 
 					//getUserName() 

@@ -6,12 +6,13 @@ export const request=(options)=>{
 			method:options.method || 'get',
 			url:options.url || '',
 			data:options.data || null,
+			//
 			withCredentials: true
 		})
 		.then(result=>{
 			// console.log('1::',result)//{data: {…}, status: 200, statusText: "OK", headers: {…}, config: {…}, …}整个结果是result
-			let data=result.data;
-			// console.log(data)//{code: 0, errmessage: "", data: {…}}
+			// let data=result.data;
+			console.log(data)//{code: 0, errmessage: "", data: {…}}
 			if(data.code==10){//既不等于0也不等于1时走到这里面
 				window.loaction.href='/login';
 				reject(data.errmessage)

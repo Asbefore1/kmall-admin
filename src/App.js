@@ -16,7 +16,7 @@ import {
   Redirect//自动跳转
 } from 'react-router-dom'
 
-//App相当于是一个根组件
+//App相当于是一个根组件(容器组件)
 class App extends Component{
 
 	render(){
