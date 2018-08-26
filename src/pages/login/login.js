@@ -1,6 +1,6 @@
 import React,{ Component } from 'react';
 import { Form, Icon, Input, Button,message } from 'antd';
-import './zujian.css';
+import './login.css';
 import { connect } from 'react-redux';
 import { actionCreator } from './store/center.js';
 const FormItem = Form.Item;
@@ -11,7 +11,7 @@ class NormalLoginForm extends React.Component {
 		super(props);
 		this.handleSubmit=this.handleSubmit.bind(this)
 		this.state={
-			isFetching:true
+			isFetching:true//isFetching是否是吸引人的,在这里是是否转圈
 		}
 	}
 	handleSubmit(e){
@@ -47,7 +47,7 @@ class NormalLoginForm extends React.Component {
 		        	type="primary" 
 		        	onClick={this.handleSubmit} 
 		        	className="login-form-button"
-		        	loading={this.props.isFetching}//点击让登录转圈
+		        	loading={this.props.isFetching}//点击让登录转圈,true是转圈,false不转
 		        >
 		       	登录
 		        </Button>     

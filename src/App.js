@@ -3,7 +3,7 @@ import { getUserName } from 'util/ajax.js';
 //引入css
 import './App.css';
 
-import Login from 'pages/login/zujian.js';
+import Login from 'pages/login/login.js';
 import Home from 'pages/home/home.js';
 import User from 'pages/user/user.js';
 import Errpage from './common/errpage/errpage.js';
@@ -27,15 +27,15 @@ class App extends Component{
 				{...rest}
 				render = {props=>(
 					getUserName()
-					? <Component {...props} />//{/*如果没有用户信息则调用Component组件（Home组件）,并将props参数传到组件中*/}
-					: <Redirect to="/login" />//{/*如果有用户信息直接跳转到/login路由下*/}
+					? <Component {...props} />//{/*如果有用户信息则调用Component组件（Home组件）,并将props参数传到组件中*/}
+					: <Redirect to="/login" />//{/*如果没有用户信息直接跳转到/login路由下*/}
 				)}
 			/>
 		)
 		//自定义路由的另一种写法
 
 		const LoginRoute =({component:Component,...rest})=>{
-			if(getUserName()){//有用户信息了就不让它去登陆的页面
+			if(getUserName()){//有用户信息了就让它直接跳转到首页,也就是根目录下
 				return <Redirect to="/" />
 			}else{//没有用户信息就让它去登陆的页面
 				return <Route {...rest} component={Component} />

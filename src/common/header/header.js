@@ -19,15 +19,15 @@ class MyHeader extends Component{
 		})
 		.then(result=>{
 			// console.log(result)
-			removeUserName();//退出并删除保存的localStorage
-			window.location.href='/login'
+			removeUserName();//退出时先删除保存的localStorage
+			window.location.href='/login'//然后再跳转到登录页面
 		})
 	}
 
 	render(){
 		const menu = (
-		  <Menu>
-		    <Menu.Item onClick={this.handleLogout}>
+		  <Menu onClick={this.handleLogout}>
+		    <Menu.Item>
 		      <Icon type="logout" />退出
 		    </Menu.Item>  
 		  </Menu> 
@@ -37,11 +37,11 @@ class MyHeader extends Component{
 				<Header className="header">
 					<div className="logo">KMALL</div>	
 					<div className='menu' >
-				  	<Dropdown className='dropdown' overlay={menu} trigger={['click']}>
-				   	 	<a href="#" ><Icon type="smile" />欢迎{ getUserName() }用户<Icon type="down" /></a>
-				  	</Dropdown>	
-				  </div>	
-			  </Header>
+				  		<Dropdown className='dropdown' overlay={menu} trigger={['click']}>
+				   	 		<a href="#" ><Icon type="smile" />欢迎{ getUserName() }用户<Icon type="down" /></a>
+				  		</Dropdown>	
+				  	</div>	
+			  	</Header>
 		  </div>
 		)
 	}
