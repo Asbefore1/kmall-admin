@@ -4,9 +4,10 @@ import { request,storageUserName } from 'util/ajax.js';
 import { ADMIN_COUNT } from 'api/jiekou.js';
 import * as types from './actionTypes.js';
 
-const setCountAction=()=>{
+const setCountAction=(payload)=>{
 	return{
-		type:types.SET_COUNT
+		type:types.SET_COUNT,
+		payload
 	}
 }
 
@@ -20,7 +21,7 @@ export const getCountAction=()=>{
 	    .then((result)=>{//发送成功从后端接收到数据data
 	      	// console.log(result)//{code: 0, errmessage: "", data: {…}}
 	      	if(result.code==0){//等于0时发送ajax成功,并且成功找到数据
-	      		dispatch(setCountAction())
+	      		dispatch(setCountAction(result.data))
 	      	}else if(result.code==1){//等于1时发送ajax成功,但没找到数据
 	      		message.error(result.errmessage)
 	      	}

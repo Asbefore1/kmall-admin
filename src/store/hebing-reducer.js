@@ -6,8 +6,10 @@ import { combineReducers } from 'redux-immutable';
 //指代这个reducer是todolist里面的reducer
 import { reducer as loginReducer } from 'pages/login/store/center.js';
 import { reducer as homeReducer } from 'pages/home/store/center.js';
+import { reducer as userReducer } from 'pages/user/store/center.js';
 
 export default combineReducers({//导出reducer
 	login:loginReducer,
-	home:homeReducer
+	home:homeReducer,
+	user:userReducer
 })

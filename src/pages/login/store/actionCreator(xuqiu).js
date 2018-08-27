@@ -29,9 +29,10 @@ export const getLoginAction=(values)=>{
 	      	// console.log(result)//{code: 0, errmessage: "", data: {…}}
 	      	if(result.code==0){//等于0时发送ajax成功,并且成功找到数据
 	      		//在浏览器中存储用户信息
+	      		//去调用util里面的ajax.js上面的storageUserName
 	      		storageUserName(result.data.username)
-	      		window.location.href='/'
-	      	}else if(result.code==1){//等于1时发送ajax成功,但没找到数据
+	      		window.location.href='/';
+	      	}else if(result.code==1){//等于1时发送ajax失败
 	      		message.error(result.errmessage)
 	      	}
 	      	//请求完成后就不再转圈(不一定成功但不再转圈了)       

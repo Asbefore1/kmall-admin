@@ -6,6 +6,7 @@ import './App.css';
 import Login from 'pages/login/login.js';
 import Home from 'pages/home/home.js';
 import User from 'pages/user/user.js';
+import Category from 'pages/category/category(Entrance to the file).js';
 import Errpage from './common/errpage/errpage.js';
 
 import {
@@ -49,6 +50,7 @@ class App extends Component{
 					<Switch>{/*找到一个就不再往下找了*/}												
 						<ProtectedRoute exact path="/" component={ Home } />	
 						<ProtectedRoute path="/user" component={ User } />	
+						<ProtectedRoute path="/category" component={ Category } />	
 						<LoginRoute path="/login" component={ Login } />
 						{/*没有路由的时候会走到errpage里面*/}	
 						<Route  component={ Errpage } />	

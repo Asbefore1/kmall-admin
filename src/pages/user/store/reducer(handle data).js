@@ -13,24 +13,22 @@
 //解决效率问题
 import { fromJS }  from 'immutable';
 import * as types from './actionTypes.js';
+
+//初始化对象
 const defaultState=fromJS({//相当于返回了一个map,map也就是immutable的对象
-	usernum:100,
-	ordernum:101,
-	pronum:102
+	isFetching:false,
+	current:1,
+	pageSize:10,
+	total:100
 })
-
-
-
 
 //整个export default导出来了一个函数
 export default (state=defaultState,action)=>{
-
-	if(action.type==types.SET_COUNT){
-		return state.merge({//merge是相当于set,是设置的意思
-			usernum:action.payload.usernum,
-			ordernum:action.payload.ordernum,
-			pronum:action.payload.pronum
-		})
+	if(action.type==types.PAGE_REQUEST){
+		return state.set('isFetching',true)
+	}
+	if(action.type==types.PAGE_DONE){
+		return state.set('isFetching',false)
 	}
 	return state
 }

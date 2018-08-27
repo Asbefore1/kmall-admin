@@ -4,7 +4,7 @@ import './login.css';
 import { connect } from 'react-redux';
 import { actionCreator } from './store/center.js';
 const FormItem = Form.Item;
-const axios = require('axios');
+
 
 class NormalLoginForm extends React.Component {
 	constructor(props){
