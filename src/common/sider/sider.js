@@ -21,11 +21,12 @@ class MySider extends Component{
 		            		<NavLink to="/user"><Icon type="user" />用户列表</NavLink>
 		            	</Menu.Item>
 		            	<Menu.Item key="3">
-		            		<NavLink to="/product"><Icon type="shop" />商品列表</NavLink>	            		
-		            	</Menu.Item>
-		            	<Menu.Item key="4">
 		            		<NavLink to="/category"><Icon type="database" />分类列表</NavLink>	            		
 		            	</Menu.Item>
+		            	<Menu.Item key="4">
+		            		<NavLink to="/product"><Icon type="shop" />商品列表</NavLink>	            		
+		            	</Menu.Item>
+		            	
 			        </Menu>
 		        </Sider>
 	        </div>

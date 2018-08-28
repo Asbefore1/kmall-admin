@@ -10,9 +10,6 @@ class NormalLoginForm extends React.Component {
 	constructor(props){
 		super(props);
 		this.handleSubmit=this.handleSubmit.bind(this)
-		this.state={
-			isFetching:true//isFetching是否是吸引人的,在这里是是否转圈
-		}
 	}
 	handleSubmit(e){
 	 	e.preventDefault();//阻止默认行为

@@ -1,31 +1,42 @@
 import React,{ Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Breadcrumb } from 'antd';
-
 import MyLayout from '../../common/layout/layout.js';
+import { actionCreator } from './store/center.js';
 
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Breadcrumb,Button,Form, Input,Row, Col,Select } from 'antd';
+import { connect } from 'react-redux';
+
+
+
+
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
 
-class RegistrationForm extends Component{
+class NormalCategoryAdd extends Component{
+
+	constructor(props){
+		super(props);
+		this.handleSubmit=this.handleSubmit.bind(this)
+	}
+
+	componentDidMount(){
+		this.props.handleLevelOneCategories()
+	}
+
+	handleSubmit(e){
+	  	this.props.form.validateFields((err, values) => {
+		    // console.log(values)//values是分类名称和分类层级
+		    if (!err) {	
+			   this.props.handleAddCategory(values)
+		    }
+		})
+	}
 
 	render(){
 		const { getFieldDecorator } = this.props.form;
-    	const { autoCompleteResult } = this.state;
 
-    	const prefixSelector = getFieldDecorator('prefix', {
-		      initialValue: '86',
-		    })(
-		      <Select style={{ width: 70 }}>
-		        <Option value="86">+86</Option>
-		        <Option value="87">+87</Option>
-		      </Select>
-	    );
-
-
+		//分类名称
 	    const formItemLayout = {
 	      labelCol: {
 	        xs: { span: 24 },
@@ -36,6 +47,7 @@ class RegistrationForm extends Component{
 	        sm: { span: 16 },
 	      },
 	    };
+	    //分类层级
 	    const tailFormItemLayout = {
 	      wrapperCol: {
 	        xs: {
@@ -56,16 +68,14 @@ class RegistrationForm extends Component{
 			    		<Breadcrumb.Item>分类列表</Breadcrumb.Item>
 			    		<Breadcrumb.Item>新增分类</Breadcrumb.Item>
 					</Breadcrumb>
-					<Form onSubmit={this.handleSubmit}>
+					<Form>
 				        <FormItem
-				          {...formItemLayout}
-				          label="E-mail"
+				          {...formItemLayout}				          
+				          label="分类名称"
 				        >
-				          {getFieldDecorator('email', {
+				          {getFieldDecorator('name', {
 				            rules: [{
-				              type: 'email', message: 'The input is not valid E-mail!',
-				            }, {
-				              required: true, message: 'Please input your E-mail!',
+				              required: true, message: '请输入分类的名称',
 				            }],
 				          })(
 				            <Input />
@@ -73,17 +83,32 @@ class RegistrationForm extends Component{
 				        </FormItem>
 				        <FormItem
 				          {...formItemLayout}
-				          label="Password"
+				          label="分类层级"
 				        >
-				          {getFieldDecorator('password', {
+				          {getFieldDecorator('pid', {
 				            rules: [{
-				              required: true, message: 'Please input your password!',
-				            }, {
-				              validator: this.validateToNextPassword,
+				              required: true, message: '请选择父级分类',
 				            }],
 				          })(
-				            <Input type="password" />
+				            <Select initialValue="0" style={{ width: 300 }}>
+						      	<Option value="0">根分类</Option>
+						      	{
+						      		this.props.levelOneCategories.map((category)=>{
+						      			// console.log(category)
+						      			return <Option key={ category.get('_id')} value={ category.get('_id')} >根分类/{ category.get('name') }</Option>
+						      		})
+						      	}
+						    </Select>
 				          )}
+				        </FormItem>
+				        <FormItem {...tailFormItemLayout}>
+				          	<Button 
+				          		type="primary" 
+				          		onClick={ this.handleSubmit }
+				          		loading={this.props.isAddFetching}
+				          	>
+				          		提交
+				          	</Button>
 				        </FormItem>
 				    </Form>
 				</div>
@@ -92,10 +117,29 @@ class RegistrationForm extends Component{
 	}
 }
 
-const CategoryAdd = Form.create()(RegistrationForm);
+const CategoryAdd=Form.create()(NormalCategoryAdd);
+
+const mapStateToProps=(state)=>{
+	return{
+		isAddFetching:state.get('category').get('isAddFetching'),
+		levelOneCategories:state.get('category').get('levelOneCategories')
+	}
+}
+
+//映射
+const mapDispatchToProps=(dispatch)=>{
+	return {
+		handleAddCategory:(values)=>{
+			// console.log(values)
+			const action=actionCreator.getAddCategoryAction(values);
+			dispatch(action)
+		},
+		handleLevelOneCategories:()=>{
+			const action=actionCreator.handleLevelOneCategoriesAction();
+			dispatch(action)
+		}
+	}
+}
 
 
-
-
-
-export default CategoryAdd;
+export default connect(mapStateToProps,mapDispatchToProps)(CategoryAdd);

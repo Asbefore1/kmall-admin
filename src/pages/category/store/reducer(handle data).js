@@ -13,34 +13,24 @@
 //解决效率问题
 import { fromJS }  from 'immutable';
 import * as types from './actionTypes.js';
-
-//初始化对象
-//用fromJS包装一个immutable对象
-const defaultState=fromJS({
-	isFetching:false,
-	current:1,
-	pageSize:10,
-	total:100,
-	list:[]//list是一个数组,也是immutable对象
+const defaultState=fromJS({//相当于返回了一个map,map也就是immutable的对象
+	isAddFetching:false,
+	levelOneCategories:[]
 })
+
+
+
 
 //整个export default导出来了一个函数
 export default (state=defaultState,action)=>{
-	if(action.type==types.PAGE_REQUEST){
-		return state.set('isFetching',true)
+	if(action.type==types.ADD_REQUEST){
+		return state.set('isAddFetching',true)
 	}
-	if(action.type==types.PAGE_DONE){
-		return state.set('isFetching',false)
+	if(action.type==types.ADD_DONE){
+		return state.set('isAddFetching',false)
 	}
-	if(action.type==types.SET_PAGE){
-		// console.log('before state...',state.get('list'))//List也是一个immutable对象
-		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
-			current:action.payload.current,
-			pageSize:action.payload.pageSize,
-			total:action.payload.total,
-			list:fromJS(action.payload.list)//返回去的时候尽量跟前面定义的一样,返回immutable对象
-		})
+	if(action.type==types.SET_LEVEL_ONE_CATEGORIES){
+		return state.set('levelOneCategories',fromJS(action.payload))
 	}
-
 	return state
 }
