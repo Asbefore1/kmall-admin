@@ -20,9 +20,16 @@ const setLevelOneCategories=(payload)=>{
 		payload
 	}	
 }
+const setPageAction=(payload)=>{
+	return{
+		type:types.SET_PAGE,
+		payload
+	}
+}
+
 
 //由于引进了redux-thunk,所以action可以接收对象
-export const getAddCategoryAction=(values)=>{
+export const getAddCategoryAction=(values)=>{//向后台添加数据
 	return (dispatch)=>{//派送时又返回了一个dispatch
 		//发送了请求之后就不再转圈	  
 	    dispatch(getAddRequestAction())  	
@@ -72,6 +79,32 @@ export const handleLevelOneCategoriesAction=()=>{
 	      	if(result.code==0){
 	      		// console.log(result)
 	      		dispatch(setLevelOneCategories(result.data))
+	      	}else{
+	      		message.error(result.errmessage);
+	      	}
+	    })
+	    .catch((err)=>{
+	      	message.error('网络开小差了,请稍后再试..');
+	    })
+	}
+}
+
+
+//由于引进了redux-thunk,所以action可以接收对象
+export const getPageAction=(pid,currentPage)=>{
+	return (dispatch)=>{//派送时又返回了一个dispatch	
+	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
+	      	method: 'get',
+			url: GET_CATEGORIES,
+			data: {
+				pid:pid,
+				currentPage:currentPage
+			}
+	    })
+	    .then((result)=>{//发送成功从后端接收到数据data
+	      	console.log('result....',result)
+	      	if(result.code==0){
+	      		dispatch(setPageAction(result.data))
 	      	}else{
 	      		message.error(result.errmessage);
 	      	}

@@ -33,7 +33,7 @@ export const getPageAction=(currentPage)=>{
 			}
 	    })
 	    .then((result)=>{//发送成功从后端接收到数据data
-	      	console.log('result...',result)//{code: 0, data: {…}}
+	      	// console.log('result...',result)//{code: 0, data: {…}}
 	      	//data:{current: 1, pageSize: 6, total: 2, list: Array(2)}
 	      	//list:Array(2)
 	      		//0:{isAdmin: true, _id: "5b7f7d450b068915f41d4f30", username: "admin", password: "df273ac1b80e76bbfe6673f53f129b2b8c00ada10722c5864ea77ddf566f9e38", __v: 0}

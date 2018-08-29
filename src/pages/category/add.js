@@ -13,19 +13,20 @@ import { connect } from 'react-redux';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+//组件
 class NormalCategoryAdd extends Component{
-
+	//constructor是自动执行的
 	constructor(props){
 		super(props);
 		this.handleSubmit=this.handleSubmit.bind(this)
 	}
-
+	//也是自动执行的
 	componentDidMount(){
 		this.props.handleLevelOneCategories()
 	}
 
 	handleSubmit(e){
-	  	this.props.form.validateFields((err, values) => {
+	  	this.props.form.validateFields((err, values) => {//获取到前台输入的内容
 		    // console.log(values)//values是分类名称和分类层级
 		    if (!err) {	
 			   this.props.handleAddCategory(values)
@@ -83,7 +84,7 @@ class NormalCategoryAdd extends Component{
 				        </FormItem>
 				        <FormItem
 				          {...formItemLayout}
-				          label="分类层级"
+				          label="父级分类"
 				        >
 				          {getFieldDecorator('pid', {
 				            rules: [{
@@ -129,6 +130,7 @@ const mapStateToProps=(state)=>{
 //映射
 const mapDispatchToProps=(dispatch)=>{
 	return {
+		//向后台添加数据派发action
 		handleAddCategory:(values)=>{
 			// console.log(values)
 			const action=actionCreator.getAddCategoryAction(values);

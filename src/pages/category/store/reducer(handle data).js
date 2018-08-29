@@ -15,7 +15,12 @@ import { fromJS }  from 'immutable';
 import * as types from './actionTypes.js';
 const defaultState=fromJS({//相当于返回了一个map,map也就是immutable的对象
 	isAddFetching:false,
-	levelOneCategories:[]
+	levelOneCategories:[],
+	// isFetching:false,
+	current:1,
+	pageSize:10,
+	total:100,
+	list:[]//list是一个数组,也是immutable对象
 })
 
 
@@ -31,6 +36,17 @@ export default (state=defaultState,action)=>{
 	}
 	if(action.type==types.SET_LEVEL_ONE_CATEGORIES){
 		return state.set('levelOneCategories',fromJS(action.payload))
+	}
+
+	if(action.type==types.SET_PAGE){
+		console.log('a:::')
+		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
+			current:action.payload.current,
+			pageSize:action.payload.pageSize,
+			total:action.payload.total,
+			list:fromJS(action.payload.list)//返回去的时候尽量跟前面定义的一样,返回immutable对象
+		})
+		console.log('action.payload.list...',action.payload.list)
 	}
 	return state
 }

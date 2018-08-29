@@ -14,11 +14,9 @@ class Category extends Component{
 
 			<Switch>
 				<Route path='/category/add' component={ CategoryAdd } ></Route>
-				<Route path='/category' component={ CategoryList } ></Route>
-
-				<MyLayout>
-					
-				</MyLayout>				
+				<Route path='/category/:pid?' component={ CategoryList } ></Route>
+				{/*支持正则,如果有pid就是/category/pid,如果没有就是/category*/}
+				<MyLayout></MyLayout>				
 			</Switch>
 		)
 	}
