@@ -16,11 +16,15 @@ import * as types from './actionTypes.js';
 const defaultState=fromJS({//相当于返回了一个map,map也就是immutable的对象
 	isAddFetching:false,
 	levelOneCategories:[],
-	// isFetching:false,
-	current:1,
-	pageSize:10,
-	total:100,
-	list:[]//list是一个数组,也是immutable对象
+	isPageFetching:false,
+	current:0,
+	pageSize:0,
+	total:0,
+	list:[],//list是一个数组,也是immutable对象,
+	UpdateVisible:false,
+	uploadId:'',
+	uploadName:'',
+
 })
 
 
@@ -38,15 +42,31 @@ export default (state=defaultState,action)=>{
 		return state.set('levelOneCategories',fromJS(action.payload))
 	}
 
+	if(action.type==types.GET_PAGE_REQUEST){
+		return state.set('isPageFetching',true)
+	}
+	if(action.type==types.GET_PAGE_DONE){
+		return state.set('isPageFetching',false)
+	}
+
+
+
 	if(action.type==types.SET_PAGE){
-		console.log('a:::')
 		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
+			isPageFetching:action.payload.isPageFetching,
 			current:action.payload.current,
 			pageSize:action.payload.pageSize,
 			total:action.payload.total,
 			list:fromJS(action.payload.list)//返回去的时候尽量跟前面定义的一样,返回immutable对象
 		})
-		console.log('action.payload.list...',action.payload.list)
+	}
+
+	if(action.type==types.SHOW_UPDATE_MODAL){
+		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
+			UpdateVisible:true,
+			uploadId:action.payload.uploadId,
+			uploadName:action.payload.uploadName
+		})		
 	}
 	return state
 }

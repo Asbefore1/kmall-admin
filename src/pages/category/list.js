@@ -1,41 +1,12 @@
 import React,{ Component } from 'react';
 import { Switch,Link } from 'react-router-dom';
 import MyLayout from '../../common/layout/layout.js';
-import { Breadcrumb,Button,Table,Divider,InputNumber  } from 'antd';
+import { Breadcrumb,Button,Table,Divider,InputNumber,Modal  } from 'antd';
 import { connect } from 'react-redux';
 import { actionCreator } from './store/center.js';
 
-const columns = [
-	{
-	  title: 'id',
-	  dataIndex: 'id',
-	  key:'id'
-	}, {
-	  title: '分类名称',
-	  dataIndex: 'name',
-	  key:'name'
-	},
-	{
-	  title: '排序',
-	  dataIndex: 'order',
-	  key:'order',
-	  render:(order,record)=>{
-	  	return <InputNumber defaultValue={order} />
-	  }
-	}, 
-	{
-  		title: '操作',
-  		key: 'action',
-  		render: (text, record) => (
-    		<span>
-		      	<a href="javascript:;">更新名称</a>
-		      	<Divider type="vertical" />
-		      	<Link to={'/category/'+record.id}>查看子分类</Link>
-		    </span>
-  		)
-	}
-]
 
+/*
 const data = [{
   key: '1',
   order: 32,
@@ -52,7 +23,7 @@ const data = [{
   id:333,
   name:'aaa'
 }];
-
+*/
 
 
 
@@ -66,7 +37,7 @@ class CategoryList extends Component{
 	}
 
 	componentDidMount(){
-		//第一个参数是父级ID,第二个参数是页码
+		//第一个参数是父级ID,第二个参数是默认显示第几页的页码
 		this.props.handlePage(this.state.pid,1)
 	}
 
@@ -83,23 +54,70 @@ class CategoryList extends Component{
 			let newPid=this.props.match.params.pid || 0;
 			this.setState({
 				pid:newPid
+			},()=>{
+				this.props.handlePage(newPid,1)
 			})
 		}
 	}
 	render(){
+		const columns = [
+			{
+			  title: 'id',
+			  dataIndex: 'id',
+			  key:'id'
+			}, {
+			  title: '分类名称',
+			  dataIndex: 'name',
+			  key:'name'
+			},
+			{
+			  title: '排序',
+			  dataIndex: 'order',
+			  key:'order',
+			  render:(order,record)=>{
+			  	return <InputNumber defaultValue={order} />
+			  }
+			}, 
+			{
+		  		title: '操作',
+		  		key: 'action',
+		  		render: (text, record) => (//record就是拿到id name order pid
+		    		<span>
+				      	<a href="javascript:;"
+				      		onClick={()=>{
+				      			this.props.showUpdateModal(record.id,record.name)
+				      		}}
+				      	>
+				      	更新名称
+				      	</a>
+				      	{
+				      		record.pid==0
+				      		? 
+					      		(
+					      			<span>
+					      				<Divider type="vertical" />
+					      				<Link to={'/category/'+record.id}>查看子分类</Link>
+					      			</span>
+					      		)
+					      	:
+					      		null
+				      	}				      	
+				    </span>
+		  		)
+			}
+		]
 		let pid=this.state.pid;
 
-		// console.log('list...',this.props.list)
-		// const data=this.props.list.map((category)=>{//map接受一个函数,参数是指遍历哪个对象
-		// 	return {
-		// 		key:category.get('_id'),
-		// 		id:category.get('id'),
-		// 		name:category.get('name'),
-		// 		order:category.get('order')
-		// 	}
-		// }).toJS()//加上tojs将List转化成数组,不加的时候是List,也就是immutable对象
-
-
+		// console.log('list...',this.props.total)
+		const data=this.props.list.map((category)=>{//map接受一个函数,参数是指遍历哪个对象
+			return {
+				key:category.get('_id'),
+				id:category.get('_id'),
+				name:category.get('name'),
+				order:category.get('order'),
+				pid:category.get('pid')
+			}
+		}).toJS()//加上tojs将List转化成数组,不加的时候是List,也就是immutable对象
 		return (
 			<Switch>
 				<MyLayout>
@@ -108,16 +126,43 @@ class CategoryList extends Component{
 			    			<Breadcrumb.Item>新增分类</Breadcrumb.Item>
 			    			<Breadcrumb.Item>分类列表</Breadcrumb.Item>
 						</Breadcrumb>
-						<div>
-							<h3 style={{ float:'left' }}>父类Id:{pid}</h3>		
+						<div className='clearfix'>
+							<h3 style={{ float:'left' }}>父类Id:{ pid }</h3>		
 							<Link to='/category/add'>
 								<Button type="primary" style={{ float:'right' }}>添加分类</Button>								
 							</Link>
 						</div>
 						<Table 
 							dataSource={data} 
-							columns={columns}							
+							columns={columns}
+							pagination={
+								{
+									current:this.props.current,//当前显示第几页
+									pageSize:this.props.pageSize,//每页显示多少个
+									total:this.props.total,//总共有多少个
+								}
+							}
+							//改变页数
+							onChange={(pagination)=>{
+									this.props.handlePage(pid,pagination.current)
+									// console.log(pagination.current)
+								}
+							}
+							loading={
+								{
+									spinning:this.props.isPageFetching,
+									tip:'页面正在加载中...'
+								}							
+							}							
 						/>
+						<Modal
+				          	title="修改分类名称"
+				          	visible={this.props.UpdateVisible}
+				          	onOk={this.props.handleOk}
+				          	onCancel={this.props.handleCancel}
+				        >
+				        	<p>Some contents...</p>
+				        </Modal>
 					</div>
 				</MyLayout>
 			</Switch>
@@ -126,14 +171,14 @@ class CategoryList extends Component{
 }
 
 const mapStateToProps=(state)=>{
-	console.log('a:::')
 	return{
-
-		// isFetching:state.get('category').get('isFetching'),
+		isPageFetching:state.get('category').get('isPageFetching'),
+		id:state.get('category').get('_id'),
 		current:state.get('category').get('current'),
 		pageSize:state.get('category').get('pageSize'),
 		total:state.get('category').get('total'),
-		list:state.get('category').get('list')
+		list:state.get('category').get('list'),
+		UpdateVisible:state.get('category').get('UpdateVisible'),
 	}
 }
 
@@ -142,9 +187,16 @@ const mapDispatchToProps=(dispatch)=>{
 		handlePage:(pid,currentPage)=>{
 			const action=actionCreator.getPageAction(pid,currentPage);
 			dispatch(action)
+		},
+		showUpdateModal:(uploadId,uploadName)=>{
+			const action=actionCreator.showUpdateModalAction(uploadId,uploadName);
+			dispatch(action)
 		}
 	}
 }
 
 
-export default connect(null,mapDispatchToProps)(CategoryList);
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(CategoryList);

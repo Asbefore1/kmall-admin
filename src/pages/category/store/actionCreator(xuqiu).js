@@ -1,7 +1,7 @@
 
 import { message } from 'antd';//自动跳出来一个提示
 import { request,storageUserName } from 'util/ajax.js';
-import { ADD_CATEGORY,GET_CATEGORIES } from 'api/jiekou.js';
+import { ADD_CATEGORY,GET_CATEGORIES,GET_PAGE_REQUEST,GET_PAGE_DONE} from 'api/jiekou.js';
 import * as types from './actionTypes.js';
 
 const getAddRequestAction=()=>{
@@ -14,6 +14,18 @@ const getAddDoneAction=()=>{
 		type:types.ADD_DONE
 	}
 }
+
+const getPageRequestAction=()=>{
+	return{
+		type:types.GET_PAGE_REQUEST
+	}
+}
+const getPageDoneAction=()=>{
+	return{
+		type:types.GET_PAGE_DONE
+	}
+}
+
 const setLevelOneCategories=(payload)=>{
 	return{
 		type:types.SET_LEVEL_ONE_CATEGORIES,
@@ -27,6 +39,15 @@ const setPageAction=(payload)=>{
 	}
 }
 
+export const showUpdateModalAction=(uploadId,uploadName)=>{
+	return {
+		type:types.SHOW_UPDATE_MODAL,
+		payload:{
+			uploadId:uploadId,
+			uploadName:uploadName
+		}		
+	}
+}
 
 //由于引进了redux-thunk,所以action可以接收对象
 export const getAddCategoryAction=(values)=>{//向后台添加数据
@@ -92,7 +113,8 @@ export const handleLevelOneCategoriesAction=()=>{
 
 //由于引进了redux-thunk,所以action可以接收对象
 export const getPageAction=(pid,currentPage)=>{
-	return (dispatch)=>{//派送时又返回了一个dispatch	
+	return (dispatch)=>{//派送时又返回了一个dispatch
+		dispatch(getPageRequestAction())  
 	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
 	      	method: 'get',
 			url: GET_CATEGORIES,
@@ -102,15 +124,18 @@ export const getPageAction=(pid,currentPage)=>{
 			}
 	    })
 	    .then((result)=>{//发送成功从后端接收到数据data
-	      	console.log('result....',result)
+	      	// console.log('result....',result)
 	      	if(result.code==0){
 	      		dispatch(setPageAction(result.data))
 	      	}else{
 	      		message.error(result.errmessage);
 	      	}
+	      	dispatch(getPageDoneAction()) 
 	    })
 	    .catch((err)=>{
 	      	message.error('网络开小差了,请稍后再试..');
+	      	dispatch(getPageDoneAction()) 
 	    })
 	}
 }
+
