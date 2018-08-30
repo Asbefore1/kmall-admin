@@ -9,3 +9,4 @@ export const GET_USERS=SERVER+'admin/users';
 export const ADD_CATEGORY=SERVER+'category';
 //查找分类并添加到根分类下
 export const GET_CATEGORIES=SERVER+'category';
+export const HANDLE_OK=SERVER+'category/changeName';

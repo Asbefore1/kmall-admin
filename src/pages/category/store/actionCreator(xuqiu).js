@@ -1,7 +1,7 @@
 
 import { message } from 'antd';//自动跳出来一个提示
 import { request,storageUserName } from 'util/ajax.js';
-import { ADD_CATEGORY,GET_CATEGORIES,GET_PAGE_REQUEST,GET_PAGE_DONE} from 'api/jiekou.js';
+import { ADD_CATEGORY,GET_CATEGORIES,GET_PAGE_REQUEST,GET_PAGE_DONE,HANDLE_OK} from 'api/jiekou.js';
 import * as types from './actionTypes.js';
 
 const getAddRequestAction=()=>{
@@ -38,16 +38,29 @@ const setPageAction=(payload)=>{
 		payload
 	}
 }
-
-export const showUpdateModalAction=(uploadId,uploadName)=>{
+export const handleCancelModalAction=()=>{
+	return{
+		type:types.HANDLE_CANCEL_MODAL
+	}
+}
+export const showUpdateModalAction=(updateId,updateName)=>{
+	
 	return {
 		type:types.SHOW_UPDATE_MODAL,
 		payload:{
-			uploadId:uploadId,
-			uploadName:uploadName
+			updateId:updateId,
+			updateName:updateName
 		}		
 	}
 }
+export const handleNewNameAction=(payload)=>{
+	return{
+		type:types.HANDLE_NEW_NAME,
+		payload
+	}
+}
+
+
 
 //由于引进了redux-thunk,所以action可以接收对象
 export const getAddCategoryAction=(values)=>{//向后台添加数据
@@ -139,3 +152,33 @@ export const getPageAction=(pid,currentPage)=>{
 	}
 }
 
+export const handleOkAction=(pid)=>{
+	return (dispatch,getState)=>{//getState用来获取到store上的state
+		const state=getState().get('category');
+		
+	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
+	      	method: 'put',
+			url: HANDLE_OK,
+			data: {
+				updateId:state.get('updateId'),
+				updateName:state.get('updateName'),
+				pid:pid,
+				currentPage:state.get('current')
+			}
+	    })
+	    .then((result)=>{//发送成功从后端接收到数据data
+	      	console.log('result....',result.data)  	
+	      	if(result.code==0){
+	      		dispatch(setPageAction(result.data)) 
+	      		message.success('更新成功');	 
+	      		dispatch(handleCancelModalAction())  
+	      	}else{
+	      		message.error(result.errmessage);
+	      	}
+	      	
+	    })
+	    .catch((err)=>{
+	      	message.error('网络开小差了,请稍后再试..');
+	    })
+	}
+}

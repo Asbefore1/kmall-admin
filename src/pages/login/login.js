@@ -12,7 +12,6 @@ class NormalLoginForm extends React.Component {
 		this.handleSubmit=this.handleSubmit.bind(this)
 	}
 	handleSubmit(e){
-	 	e.preventDefault();//阻止默认行为
 	  	this.props.form.validateFields((err, values) => {
 		    // console.log(values)//values是用户名和密码
 		    if (!err) {	

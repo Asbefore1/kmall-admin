@@ -22,9 +22,8 @@ const defaultState=fromJS({//相当于返回了一个map,map也就是immutable�
 	total:0,
 	list:[],//list是一个数组,也是immutable对象,
 	UpdateVisible:false,
-	uploadId:'',
-	uploadName:'',
-
+	updateId:'',
+	updateName:'',
 })
 
 
@@ -49,11 +48,12 @@ export default (state=defaultState,action)=>{
 		return state.set('isPageFetching',false)
 	}
 
-
+	if(action.type==types.HANDLE_CANCEL_MODAL){
+		return state.set('UpdateVisible',false)
+	}
 
 	if(action.type==types.SET_PAGE){
 		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
-			isPageFetching:action.payload.isPageFetching,
 			current:action.payload.current,
 			pageSize:action.payload.pageSize,
 			total:action.payload.total,
@@ -64,9 +64,14 @@ export default (state=defaultState,action)=>{
 	if(action.type==types.SHOW_UPDATE_MODAL){
 		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
 			UpdateVisible:true,
-			uploadId:action.payload.uploadId,
-			uploadName:action.payload.uploadName
+			updateId:action.payload.updateId,
+			updateName:action.payload.updateName
 		})		
 	}
+
+	if(action.type==types.HANDLE_NEW_NAME){
+		return state.set('updateName',action.payload)
+	}
+
 	return state
 }

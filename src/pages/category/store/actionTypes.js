@@ -5,4 +5,6 @@ export const SET_PAGE='category/set_page';
 export const GET_PAGE_REQUEST='category/get_page_request';
 export const GET_PAGE_DONE='category/get_page_done';
 export const SHOW_UPDATE_MODAL='category/show_update_modal';
+export const HANDLE_CANCEL_MODAL='category/handle_cancel_modal';
+export const HANDLE_NEW_NAME='category/handle_new_name';
 

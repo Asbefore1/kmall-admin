@@ -1,7 +1,7 @@
 import React,{ Component } from 'react';
 import { Switch,Link } from 'react-router-dom';
 import MyLayout from '../../common/layout/layout.js';
-import { Breadcrumb,Button,Table,Divider,InputNumber,Modal  } from 'antd';
+import { Breadcrumb,Button,Table,Divider,InputNumber,Modal,Input  } from 'antd';
 import { connect } from 'react-redux';
 import { actionCreator } from './store/center.js';
 
@@ -59,6 +59,8 @@ class CategoryList extends Component{
 			})
 		}
 	}
+
+
 	render(){
 		const columns = [
 			{
@@ -107,8 +109,6 @@ class CategoryList extends Component{
 			}
 		]
 		let pid=this.state.pid;
-
-		// console.log('list...',this.props.total)
 		const data=this.props.list.map((category)=>{//map接受一个函数,参数是指遍历哪个对象
 			return {
 				key:category.get('_id'),
@@ -154,14 +154,23 @@ class CategoryList extends Component{
 									tip:'页面正在加载中...'
 								}							
 							}							
-						/>
+						/>						
 						<Modal
 				          	title="修改分类名称"
 				          	visible={this.props.UpdateVisible}
-				          	onOk={this.props.handleOk}
+				          	onOk={()=>{this.props.handleOk(pid)}}
 				          	onCancel={this.props.handleCancel}
+				          	cancelText='取消'
+				          	okText='确定'
 				        >
-				        	<p>Some contents...</p>
+				        	<Input 
+				        		style={{width:150}} 
+				        		value={this.props.updateName}	
+				        		onChange={(e)=>{
+				        			// console.log(e.target.value)
+				        			this.props.handleNewName(e.target.value)
+				        		}}	        		
+				        	/>
 				        </Modal>
 					</div>
 				</MyLayout>
@@ -179,6 +188,7 @@ const mapStateToProps=(state)=>{
 		total:state.get('category').get('total'),
 		list:state.get('category').get('list'),
 		UpdateVisible:state.get('category').get('UpdateVisible'),
+		updateName:state.get('category').get('updateName'),
 	}
 }
 
@@ -188,8 +198,20 @@ const mapDispatchToProps=(dispatch)=>{
 			const action=actionCreator.getPageAction(pid,currentPage);
 			dispatch(action)
 		},
-		showUpdateModal:(uploadId,uploadName)=>{
-			const action=actionCreator.showUpdateModalAction(uploadId,uploadName);
+		showUpdateModal:(updateId,updateName)=>{
+			const action=actionCreator.showUpdateModalAction(updateId,updateName);
+			dispatch(action)
+		},
+		handleCancel:()=>{
+			const action=actionCreator.handleCancelModalAction();
+			dispatch(action)
+		},
+		handleNewName:(newName)=>{
+			const action=actionCreator.handleNewNameAction(newName);
+			dispatch(action)
+		},
+		handleOk:(pid)=>{
+			const action=actionCreator.handleOkAction(pid);
 			dispatch(action)
 		}
 	}
