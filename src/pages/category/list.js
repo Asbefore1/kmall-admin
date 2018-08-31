@@ -1,6 +1,6 @@
 import React,{ Component } from 'react';
 import { Switch,Link } from 'react-router-dom';
-import MyLayout from '../../common/layout/layout.js';
+import MyLayout from 'common/layout/layout.js';
 import { Breadcrumb,Button,Table,Divider,InputNumber,Modal,Input  } from 'antd';
 import { connect } from 'react-redux';
 import { actionCreator } from './store/center.js';

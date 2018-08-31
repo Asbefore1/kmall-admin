@@ -1,6 +1,6 @@
 import React,{ Component } from 'react';
 import { Route } from 'react-router-dom';
-import MyLayout from '../../common/layout/layout.js';
+import MyLayout from 'common/layout/layout.js';
 import { actionCreator } from './store/center.js';
 
 import { Breadcrumb,Button,Form, Input,Row, Col,Select } from 'antd';
