@@ -123,7 +123,7 @@ class CategorySelector extends Component{
 		        {levelOneOptions}
 		        </Select>
 		        {
-		        	levelTwoCategories.length
+		        	levelTwoCategories.length//length是真
 		        	?<Select 
 			        	defaultValue={ levelTwoCategoryId }
 			        	value={ levelTwoCategoryId }

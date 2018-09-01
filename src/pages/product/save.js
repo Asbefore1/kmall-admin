@@ -1,14 +1,18 @@
 import React,{ Component } from 'react';
 import MyLayout from 'common/layout/layout.js';
-import { Breadcrumb,Form,Input,Button,Select ,InputNumber } from 'antd';
+import { actionCreator } from './store/center.js';
+import { GET_IMAGE_URL,UPLOAD_IMAGE } from 'api/jiekou.js';
 import UpdateImage from 'common/update-image/image.js';
-import { connect } from 'react-redux';
-//Editor是商品详情(使用Simditor富文本编辑器)
-import Editor from 'common/editor/editor.js';
+import { Breadcrumb,Form,Input,Button,Select ,InputNumber } from 'antd';
 //所属分类联动选择分类(单独作为一个组件进入进来)
 import CategorySelector from './category-selector.js';
+//Editor是商品详情(使用Simditor富文本编辑器)
+import Editor from 'common/editor/editor.js';
+import { connect } from 'react-redux';
 
-import { GET_IMAGE_URL,UPLOAD_IMAGE } from 'api/jiekou.js';
+
+
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -17,8 +21,15 @@ class NormalProductSave extends Component{
 
 	constructor(props){
     	super(props);
+    	this.handleSubmit=this.handleSubmit.bind(this);
     }
 
+    handleSubmit(e){
+	  	this.props.form.validateFields((err, values) => {//获取到前台输入的内容
+		    // console.log('values:::',values)
+			this.props.handleSubmitAll(err,values)
+		})
+	}
 
 	render(){
 
@@ -55,9 +66,6 @@ class NormalProductSave extends Component{
 		    			<Breadcrumb.Item>添加商品</Breadcrumb.Item>
 					</Breadcrumb>
 					<Form>
-					{
-			         	//商品名称
-			        }
 				        <FormItem
 				          {...formItemLayout}				          
 				          label="商品名称"
@@ -73,14 +81,11 @@ class NormalProductSave extends Component{
 				            />
 				          )}
 				        </FormItem>
-			        {
-			         	//商品描述
-			        }
 				        <FormItem
 				          {...formItemLayout}
 				          label="商品描述"
 				        >
-				          {getFieldDecorator('pid', {
+				          {getFieldDecorator('description', {
 				            rules: [{
 				              required: true, message: '请输入商品描述',
 				            }],
@@ -96,18 +101,19 @@ class NormalProductSave extends Component{
 				        <FormItem
 				          {...formItemLayout}
 				          label="所属分类"
+				          required={true}
+				          validateStatus={ this.props.categoryValidateStatus }
+				          help={ this.props.categoryHelp }
 				        >
 				        <CategorySelector 
 				        	//getCategoryId是从子组件里面拿出来的数据
 				         	//由于子组件更改了父组件的数据,父组件需要向子组件传递一个函数
 				        	getCategoryId={(parentId,sonId)=>{
 				        		// console.log(parentId,sonId)
+				        		this.props.getProductCategory(parentId,sonId)
 				        	}}
 				        />
 				        </FormItem>
-			        {
-			         	//商品价格
-			        }
 				        <FormItem
 				          {...formItemLayout}
 				          label="商品价格"
@@ -125,16 +131,13 @@ class NormalProductSave extends Component{
 				           	/>
 				          )}
 				        </FormItem>
-			        {
-			         	//商品库存
-			        }
 				        <FormItem
 				          {...formItemLayout}
 				          label="商品库存"
 				        >
-				          {getFieldDecorator('pid', {
+				          {getFieldDecorator('stock', {
 				            rules: [{
-				              required: true, message: '商品库存',
+				              required: true, message: '请输入商品库存',
 				            }],
 				          })(
 				           	<InputNumber 
@@ -157,22 +160,22 @@ class NormalProductSave extends Component{
 				         		max={3}
 				         		//getFileList是从子组件里面拿出来的数据
 				         		//由于子组件更改了父组件的数据,父组件需要向子组件传递一个函数
-				         		getFileList={(fileList)=>{
-				         			// console.log('save::::',fileList)
+				         		getFileList={(Image)=>{
+				         			// console.log('save::::',Image)
+				         			this.props.getProductImage(Image);
 				         		}}
 				          	/>
 				        </FormItem>
-			        {
-			         	//商品详情
-			        }
 				        <FormItem
 				          {...formItemLayout}
 				          label="商品详情"
 				        >		
 					       	<Editor  
 					       		url={ GET_IMAGE_URL }
-					       		getEditorValue={(value)=>{
-					       			console.log(value)
+				         		//由于子组件更改了父组件的数据,父组件需要向子组件传递一个函数
+					       		getEditorValue={(detail)=>{
+					       			// console.log(detail)
+					       			this.props.getProductDetail(detail);
 					       		}}
 					       	/>		   
 				        </FormItem>				        
@@ -180,7 +183,7 @@ class NormalProductSave extends Component{
 				          	<Button 
 				          		type="primary" 
 				          		onClick={ this.handleSubmit }
-				          		loading={this.props.isAddFetching}
+				          		loading={this.props.isProductSubmitFetching}
 				          	>
 				          		提交
 				          	</Button>
@@ -194,4 +197,39 @@ class NormalProductSave extends Component{
 }
 const ProductSave=Form.create()(NormalProductSave);
 
-export default connect(null,null)(ProductSave);
+const mapStateToProps=(state)=>{
+	return{
+		isProductSubmitFetching:state.get('product').get('isProductSubmitFetching'),
+		categoryValidateStatus:state.get('product').get('categoryValidateStatus'),
+		categoryHelp:state.get('product').get('categoryHelp'),
+	}
+}
+
+const mapDispatchToProps=(dispatch)=>{
+	return{
+		getProductCategory:(parentId,sonId)=>{
+			const action=actionCreator.getProductCategoryAction(parentId,sonId);
+			dispatch(action)
+		},
+		getProductImage:(Image)=>{
+			const action=actionCreator.getProductImageAction(Image);
+			dispatch(action)
+		},
+		getProductDetail:(detail)=>{
+			const action=actionCreator.getProductDetailAction(detail);
+			dispatch(action)
+		},
+		handleSubmitAll:(err,values)=>{
+			const action=actionCreator.handleSubmitAllAction(err,values);
+			dispatch(action)
+		}
+	}
+}
+
+
+
+
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(ProductSave);

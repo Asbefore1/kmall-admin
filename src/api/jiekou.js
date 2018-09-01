@@ -14,9 +14,12 @@ export const GET_CATEGORIES=SERVER+'category';
 //更新名称
 export const HANDLE_OK=SERVER+'category/changeName';
 
+
 //上传图片
 export const UPLOAD_IMAGE=SERVER+'product/uploadImage';
 //商品详情
 export const GET_IMAGE_URL=SERVER+'product/getImageUrl';
+//添加商品
+export const ADD_PRODUCT=SERVER+'product';
 
 

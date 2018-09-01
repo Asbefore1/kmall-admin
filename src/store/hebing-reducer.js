@@ -8,10 +8,12 @@ import { reducer as loginReducer } from 'pages/login/store/center.js';
 import { reducer as homeReducer } from 'pages/home/store/center.js';
 import { reducer as userReducer } from 'pages/user/store/center.js';
 import { reducer as categoryReducer } from 'pages/category/store/center.js';
+import { reducer as productReducer } from 'pages/product/store/center.js';
 
 export default combineReducers({//导出reducer
 	login:loginReducer,
 	home:homeReducer,
 	user:userReducer,
-	category:categoryReducer
+	category:categoryReducer,
+	product:productReducer
 })
