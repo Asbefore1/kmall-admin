@@ -1,10 +1,10 @@
 
 import { message } from 'antd';//自动跳出来一个提示
 import { request,storageUserName } from 'util/ajax.js';
-import { ADD_PRODUCT,GET_CATEGORIES,GET_PAGE_REQUEST,GET_PAGE_DONE,HANDLE_OK} from 'api/jiekou.js';
+import { ADD_PRODUCTS,GET_PRODUCTS,SET_NEW_ORDER,UPDATE_STATUS,GET_EDIT_PRODUCT} from 'api/jiekou.js';
 import * as types from './actionTypes.js';
 
-
+//所属分类
 export const getProductCategoryAction=(parentId,sonId)=>{
 	
 	return {
@@ -15,7 +15,7 @@ export const getProductCategoryAction=(parentId,sonId)=>{
 		}		
 	}
 }
-
+//获取商品图片
 export const getProductImageAction=(Image)=>{
 	
 	return {
@@ -25,6 +25,7 @@ export const getProductImageAction=(Image)=>{
 		}				
 	}
 }
+//获取商品详情
 export const getProductDetailAction=(detail)=>{
 	
 	return {
@@ -34,40 +35,47 @@ export const getProductDetailAction=(detail)=>{
 		}		
 	}
 }
+//提交去请求
 const getSubmitRequestAction=()=>{
 	return{
 		type:types.PRODUCT_SUBMIT_REQUEST
 	}
 }
+//提交完成
 const getSubmitDoneAction=()=>{
 	return{
 		type:types.PRODUCT_SUBMIT_DONE
 	}
 }
+//分页请求
 const getPageRequestAction=()=>{
 	return{
 		type:types.GET_PAGE_REQUEST
 	}
 }
+//分页完成
 const getPageDoneAction=()=>{
 	return{
 		type:types.GET_PAGE_DONE
 	}
 }
+//错误的分类
 const getErrorCategory=()=>{
 	return{
 		type:types.GET_ERROR_CATEGORY
 	}
 }
-const getAllProductData=(payload)=>{
+//将获取的数据显示在商品列表页面上
+const setPageAction=(payload)=>{
 	return{
-		type:types.GET_ALL_PRODUCT_DATA,
+		type:types.SET_PAGE,
 		payload
 	}
 }
 
+//提交数据
 //由于引进了redux-thunk,所以action可以接收对象
-export const handleSubmitAllAction=(err,values)=>{//向后台添加数据
+export const handleSubmitDataAction=(err,values)=>{//向后台添加数据
 	return (dispatch,getState)=>{//派送时又返回了一个dispatch
 		const state=getState().get('product');
 		const sonId=state.get('sonId');
@@ -83,7 +91,7 @@ export const handleSubmitAllAction=(err,values)=>{//向后台添加数据
 	    dispatch(getSubmitRequestAction());  	
 	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
 	      	method: 'post',
-			url: ADD_PRODUCT,
+			url: ADD_PRODUCTS,
 			data: {
 				...values,
 				sonId:state.get('sonId'),
@@ -93,8 +101,10 @@ export const handleSubmitAllAction=(err,values)=>{//向后台添加数据
 	    })
 	    .then((result)=>{//发送成功从后端接收到数据data
 	      	// console.log('result....',result)
-	      	dispatch(getAllProductData(result.data))
-	      	//请求完成后就不再转圈(不一定成功但不再转圈了)       
+	    	if(result.code==0){
+	    		message.success(result.message);
+	    		window.location.href='/product';
+	    	}
 		    dispatch(getSubmitDoneAction())
 	    })
 	    .catch((err)=>{
@@ -108,37 +118,15 @@ export const handleSubmitAllAction=(err,values)=>{//向后台添加数据
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-const setPageAction=(payload)=>{
-	return{
-		type:types.SET_PAGE,
-		payload
-	}
-}
-
-
-
+//获取商品列表
 //由于引进了redux-thunk,所以action可以接收对象
-export const getPageAction=(pid,currentPage)=>{
+export const getProductAction=(currentPage)=>{
 	return (dispatch)=>{//派送时又返回了一个dispatch
 		dispatch(getPageRequestAction())  
 	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
 	      	method: 'get',
-			url: GET_CATEGORIES,
+			url: GET_PRODUCTS,
 			data: {
-				pid:pid,
 				currentPage:currentPage
 			}
 	    })
@@ -147,7 +135,7 @@ export const getPageAction=(pid,currentPage)=>{
 	      	if(result.code==0){
 	      		dispatch(setPageAction(result.data))
 	      	}else{
-	      		message.error(result.errmessage);
+	      		message.error(result.errmessage)
 	      	}
 	      	dispatch(getPageDoneAction()) 
 	    })
@@ -158,33 +146,98 @@ export const getPageAction=(pid,currentPage)=>{
 	}
 }
 
-export const handleOkAction=(pid)=>{
-	return (dispatch,getState)=>{//getState用来获取到store上的state
-		const state=getState().get('category');
-		
+//更新排序
+export const handleOrderAction=(id,newOrder)=>{
+	return (dispatch,getState)=>{//派送时又返回了一个dispatch 
+		const state=getState().get('product');
 	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
 	      	method: 'put',
-			url: HANDLE_OK,
+			url: SET_NEW_ORDER,
 			data: {
-				updateId:state.get('updateId'),
-				updateName:state.get('updateName'),
-				pid:pid,
-				currentPage:state.get('current')
+				id:id,
+				newOrder:newOrder,
+				page:state.get('current')
 			}
 	    })
 	    .then((result)=>{//发送成功从后端接收到数据data
-	      	console.log('result....',result.data)  	
+	      	// console.log('result....',result)
 	      	if(result.code==0){
-	      		dispatch(setPageAction(result.data)) 
-	      		message.success('更新成功');	 
-	      		dispatch(handleCancelModalAction())  
+	      		dispatch(setPageAction(result.data))
 	      	}else{
-	      		message.error(result.errmessage);
+	      		message.error(result.errmessage)
 	      	}
-	      	
 	    })
 	    .catch((err)=>{
 	      	message.error('网络开小差了,请稍后再试..');
 	    })
 	}
 }
+
+//更新状态
+export const handleStatusAction=(id,newStatus)=>{
+	return (dispatch,getState)=>{//派送时又返回了一个dispatch 
+		const state=getState().get('product');
+	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
+	      	method: 'put',
+			url: UPDATE_STATUS,
+			data: {
+				id:id,
+				newStatus:newStatus,
+				page:state.get('current')
+			}
+	    })
+	    .then((result)=>{//发送成功从后端接收到数据data
+			//成功后不再刷新页面	      	
+	      	if(result.code==0){
+	      		message.success(result.message);
+	      	}else{
+	      		message.error(result.errmessage);
+	      		dispatch(setPageAction(result.data))
+	      	}
+	    })
+	    .catch((err)=>{
+	      	message.error('网络开小差了,请稍后再试..');
+	    })
+	}
+}
+
+export const getEditProductAction=(productId)=>{
+	return (dispatch)=>{//派送时又返回了一个dispatch
+	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
+	      	method: 'get',
+			url: GET_EDIT_PRODUCT,
+			data:{
+				id:productId
+			}
+	    })
+	    .then((result)=>{//发送成功从后端接收到数据data
+	      	console.log('result....',result)
+	      	// if(result.code==0){
+	      	// 	dispatch(setPageAction(result.data))
+	      	// }else{
+	      	// 	message.error(result.errmessage)
+	      	// }
+	    })
+	    .catch((err)=>{
+	      	message.error('网络开小差了,请稍后再试..');
+	    })
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

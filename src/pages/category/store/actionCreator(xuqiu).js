@@ -1,7 +1,7 @@
 
 import { message } from 'antd';//自动跳出来一个提示
 import { request,storageUserName } from 'util/ajax.js';
-import { ADD_CATEGORY,GET_CATEGORIES,GET_PAGE_REQUEST,GET_PAGE_DONE,HANDLE_OK} from 'api/jiekou.js';
+import { ADD_CATEGORY,GET_CATEGORIES,GET_PAGE_REQUEST,GET_PAGE_DONE,HANDLE_OK,UPDATE_ORDER} from 'api/jiekou.js';
 import * as types from './actionTypes.js';
 
 const getAddRequestAction=()=>{
@@ -176,6 +176,34 @@ export const handleOkAction=(pid)=>{
 	      		message.error(result.errmessage);
 	      	}
 	      	
+	    })
+	    .catch((err)=>{
+	      	message.error('网络开小差了,请稍后再试..');
+	    })
+	}
+}
+
+//更新排序
+export const handleCategoryOrderAction=(pid,id,newOrder)=>{
+	return (dispatch,getState)=>{//派送时又返回了一个dispatch 
+		const state=getState().get('category');
+	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
+	      	method: 'put',
+			url: UPDATE_ORDER,
+			data: {
+				id:id,
+				newOrder:newOrder,
+				pid:pid,
+				page:state.get('current')
+			}
+	    })
+	    .then((result)=>{//发送成功从后端接收到数据data
+	      	// console.log('result....',result)
+	      	if(result.code==0){
+	      		dispatch(setPageAction(result.data))
+	      	}else{
+	      		message.error(result.errmessage)
+	      	}
 	    })
 	    .catch((err)=>{
 	      	message.error('网络开小差了,请稍后再试..');

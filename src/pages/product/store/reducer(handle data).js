@@ -26,10 +26,7 @@ const defaultState=fromJS({//相当于返回了一个map,map也就是immutable�
 	pageSize:0,
 	total:0,
 	list:[],//list是一个数组,也是immutable对象,
-
-
-	isAddFetching:false,
-	isPageFetching:false,
+	isPageFetching:false,	
 })
 
 
@@ -66,6 +63,7 @@ export default (state=defaultState,action)=>{
 		})	
 	}
 	if(action.type==types.GET_ALL_PRODUCT_DATA){
+		console.log('1:::',action.payload.list)
 		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
 			current:action.payload.current,
 			pageSize:action.payload.pageSize,
@@ -73,6 +71,8 @@ export default (state=defaultState,action)=>{
 			list:action.payload.list
 		})	
 	}
+
+
 
 
 

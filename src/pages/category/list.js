@@ -6,28 +6,6 @@ import { connect } from 'react-redux';
 import { actionCreator } from './store/center.js';
 
 
-/*
-const data = [{
-  key: '1',
-  order: 32,
-  id:111,
-  name:'aaa'
-}, {
-  key: '2',
-  order: 42,
-  id:232,
-  name:'aaa'
-}, {
-  key: '3',
-  order: 32,
-  id:333,
-  name:'aaa'
-}];
-*/
-
-
-
-
 class CategoryList extends Component{
 	constructor(props){
 		super(props);
@@ -77,7 +55,12 @@ class CategoryList extends Component{
 			  dataIndex: 'order',
 			  key:'order',
 			  render:(order,record)=>{
-			  	return <InputNumber defaultValue={order} />
+			  	return <InputNumber 
+			  		defaultValue={order} 
+			  		onBlur={(e)=>{
+			  			this.props.handleCategoryOrder(pid,record.id,e.target.value)
+			  		}}
+			  	/>
 			  }
 			}, 
 			{
@@ -109,6 +92,7 @@ class CategoryList extends Component{
 			}
 		]
 		let pid=this.state.pid;
+		// console.log(this.props.list)
 		const data=this.props.list.map((category)=>{//map接受一个函数,参数是指遍历哪个对象
 			return {
 				key:category.get('_id'),
@@ -212,6 +196,10 @@ const mapDispatchToProps=(dispatch)=>{
 		},
 		handleOk:(pid)=>{
 			const action=actionCreator.handleOkAction(pid);
+			dispatch(action)
+		},
+		handleCategoryOrder:(pid,id,newOrder)=>{
+			const action=actionCreator.handleCategoryOrderAction(pid,id,newOrder);
 			dispatch(action)
 		}
 	}

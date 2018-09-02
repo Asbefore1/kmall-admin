@@ -53,6 +53,7 @@ export default (state=defaultState,action)=>{
 	}
 
 	if(action.type==types.SET_PAGE){
+		// console.log(action.payload.list)
 		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
 			current:action.payload.current,
 			pageSize:action.payload.pageSize,

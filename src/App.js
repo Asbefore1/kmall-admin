@@ -7,7 +7,7 @@ import Login from 'pages/login/login.js';
 import Home from 'pages/home/home.js';
 import User from 'pages/user/user.js';
 import Category from 'pages/category/category(Entrance to the file).js';
-import Product from 'pages/product/product(Entrance to the file).js';
+import Product from 'pages/product/product.js';
 import Errpage from './common/errpage/errpage.js';
 
 import {

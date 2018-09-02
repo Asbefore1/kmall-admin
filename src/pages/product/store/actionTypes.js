@@ -15,4 +15,4 @@ export const GET_PRODUCT_DETAIL='product/get_product_detail';
 export const PRODUCT_SUBMIT_REQUEST='product/product_submit_request';
 export const PRODUCT_SUBMIT_DONE='product/product_submit_done';
 export const GET_ERROR_CATEGORY='product/get_error_category';
-export const GET_ALL_PRODUCT_DATA='product/get_All_Product_Data';
+export const SET_NEW_ORDER='product/set_new_order';

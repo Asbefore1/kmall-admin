@@ -13,6 +13,8 @@ export const ADD_CATEGORY=SERVER+'category';
 export const GET_CATEGORIES=SERVER+'category';
 //更新名称
 export const HANDLE_OK=SERVER+'category/changeName';
+//更新顺序
+export const UPDATE_ORDER=SERVER+'category/updateOrder';
 
 
 //上传图片
@@ -20,6 +22,14 @@ export const UPLOAD_IMAGE=SERVER+'product/uploadImage';
 //商品详情
 export const GET_IMAGE_URL=SERVER+'product/getImageUrl';
 //添加商品
-export const ADD_PRODUCT=SERVER+'product';
+export const ADD_PRODUCTS=SERVER+'product';
+//获取商品
+export const GET_PRODUCTS=SERVER+'product';
+//更新排序
+export const SET_NEW_ORDER=SERVER+'product/setNewOrder';
+//更新状态
+export const UPDATE_STATUS=SERVER+'product/updateStatus';
+//编辑时获取信息
+export const GET_EDIT_PRODUCT=SERVER+'product/getEditProduct';
 
 

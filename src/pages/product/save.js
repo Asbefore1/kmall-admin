@@ -22,12 +22,26 @@ class NormalProductSave extends Component{
 	constructor(props){
     	super(props);
     	this.handleSubmit=this.handleSubmit.bind(this);
+    	//编辑时拿到id
+		// console.log(this.props.match.params.productId)
+		this.state={
+			productId:this.props.match.params.productId
+		}
+
+    }
+
+
+    componentDidMount(){
+    	if(this.state.productId){
+    		this.props.getEditProduct(this.state.productId)
+    	}
+    	
     }
 
     handleSubmit(e){
 	  	this.props.form.validateFields((err, values) => {//获取到前台输入的内容
 		    // console.log('values:::',values)
-			this.props.handleSubmitAll(err,values)
+			this.props.handleSubmitData(err,values)
 		})
 	}
 
@@ -219,10 +233,14 @@ const mapDispatchToProps=(dispatch)=>{
 			const action=actionCreator.getProductDetailAction(detail);
 			dispatch(action)
 		},
-		handleSubmitAll:(err,values)=>{
-			const action=actionCreator.handleSubmitAllAction(err,values);
+		handleSubmitData:(err,values)=>{
+			const action=actionCreator.handleSubmitDataAction(err,values);
 			dispatch(action)
-		}
+		},
+		getEditProduct:(productId)=>{
+			const action=actionCreator.getEditProductAction(productId);
+			dispatch(action)
+		}	
 	}
 }
 
