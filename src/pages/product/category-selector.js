@@ -17,16 +17,68 @@ class CategorySelector extends Component{
 			levelOneCategories:[],
 			levelOneCategoryId:'',
 			levelTwoCategories:[],
-			levelTwoCategoryId:''
+			levelTwoCategoryId:'',
+			needLoadLevelTwo:false,
+			isChanged:false
 		}
 		this.ChangelevelOneCategories=this.ChangelevelOneCategories.bind(this);
-		this.ChangelevelTwoCategories=this.ChangelevelTwoCategories.bind(this)
+		this.ChangelevelTwoCategories=this.ChangelevelTwoCategories.bind(this);
+		console.log('selector constructor....')
 	}
 
 	//在挂载完成后执行这个函数
 	componentDidMount(){//组件上的方法,不是this.props.loadlevelOneCategories()
-		this.loadlevelOneCategories()	
+		this.loadlevelOneCategories();
+		console.log('selector componentDidMount....')	
 	}
+
+	//用props去更新state,需要返回一个值(return一下),将返回的值和state里面的值做一个合并
+	static getDerivedStateFromProps(props, state){
+		console.log('props...',props)
+		console.log('state...',state)
+		
+		//props里面的父id和state里面的一级分类的id不相等时就改变
+		const levelOneCategoryIdChanged=props.EditParentId!=state.levelOneCategoryId;
+		const levelTwoCategoryIdChanged=props.EditSonId!=state.levelTwoCategoryId;
+		
+		//如果分类ID没有改变,就不更新state
+		if(!levelOneCategoryIdChanged && !levelTwoCategoryIdChanged){
+			return null;
+		}
+		
+		if(state.isChanged){
+			return null
+		}
+
+		//只有一级分类
+		if(props.EditParentId==0){
+			return{
+				levelOneCategoryId:props.EditSonId,
+				levelTwoCategoryId:'',
+				isChanged:true
+			}
+		}else{//有二级分类
+			return{
+				levelOneCategoryId:props.EditParentId,
+				//这里只是改变state里面的值,还需要把二级分类显示出来
+				levelTwoCategoryId:props.EditSonId,
+				needLoadLevelTwo:true,
+				isChanged:true
+			}			
+		}
+		return null;		
+	}
+	//把二级分类显示出来
+	componentDidUpdate(){
+		if(this.state.needLoadLevelTwo){
+			//调函数去发送ajax请求
+			this.loadlevelTwoCategories();
+			this.setState({
+				needLoadLevelTwo:false
+			})
+		}
+	}
+
 
 	//获取一级分类
 	loadlevelOneCategories(){
@@ -118,6 +170,8 @@ class CategorySelector extends Component{
 				
 		        <Select 
 			        style={{ width:300 ,marginRight:20 }} 
+			        defaultValue={ levelOneCategoryId }
+			        value={ levelOneCategoryId }
 			        onChange={ this.ChangelevelOneCategories }
 		        >
 		        {levelOneOptions}

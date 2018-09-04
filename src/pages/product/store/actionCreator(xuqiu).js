@@ -1,7 +1,7 @@
 
 import { message } from 'antd';//自动跳出来一个提示
 import { request,storageUserName } from 'util/ajax.js';
-import { ADD_PRODUCTS,GET_PRODUCTS,SET_NEW_ORDER,UPDATE_STATUS,GET_EDIT_PRODUCT} from 'api/jiekou.js';
+import { ADD_OR_EDIT_PRODUCTS,GET_PRODUCTS,SET_NEW_ORDER,UPDATE_STATUS,GET_EDIT_PRODUCT} from 'api/jiekou.js';
 import * as types from './actionTypes.js';
 
 //所属分类
@@ -72,6 +72,15 @@ const setPageAction=(payload)=>{
 		payload
 	}
 }
+//编辑时将数据显示在编辑页面上
+const setEditProductsAction=(payload)=>{
+	return{
+		type:types.SET_EDIT_PRODUCTS,
+		payload
+	}
+}
+
+
 
 //提交数据
 //由于引进了redux-thunk,所以action可以接收对象
@@ -88,10 +97,16 @@ export const handleSubmitDataAction=(err,values)=>{//向后台添加数据
 			return
 		}
 		//发送了请求之前转圈	  
-	    dispatch(getSubmitRequestAction());  	
+	    dispatch(getSubmitRequestAction());
+	    //新增商品
+	    let method='post';
+	    //编辑商品
+	    if(values.id){
+	    	method='put';
+	    }
 	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
-	      	method: 'post',
-			url: ADD_PRODUCTS,
+	      	method: method,
+			url: ADD_OR_EDIT_PRODUCTS,
 			data: {
 				...values,
 				sonId:state.get('sonId'),
@@ -114,8 +129,6 @@ export const handleSubmitDataAction=(err,values)=>{//向后台添加数据
 	    })
 	}
 }
-
-
 
 
 //获取商品列表
@@ -201,6 +214,7 @@ export const handleStatusAction=(id,newStatus)=>{
 	}
 }
 
+//获取编辑信息并填到框里
 export const getEditProductAction=(productId)=>{
 	return (dispatch)=>{//派送时又返回了一个dispatch
 	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回
@@ -211,12 +225,11 @@ export const getEditProductAction=(productId)=>{
 			}
 	    })
 	    .then((result)=>{//发送成功从后端接收到数据data
-	      	console.log('result....',result)
-	      	// if(result.code==0){
-	      	// 	dispatch(setPageAction(result.data))
-	      	// }else{
-	      	// 	message.error(result.errmessage)
-	      	// }
+	      	if(result.code==0){
+	      		dispatch(setEditProductsAction(result.data))
+	      	}else{
+	      		message.error(result.errmessage)
+	      	}
 	    })
 	    .catch((err)=>{
 	      	message.error('网络开小差了,请稍后再试..');

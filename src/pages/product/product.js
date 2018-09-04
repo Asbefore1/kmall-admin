@@ -9,12 +9,13 @@ class Product extends Component{
 
 	render(){
 		return (
-
-			<Switch>
-				<Route path='/product/save/:productId' component={ ProductSave } ></Route>
-				<Route path='/product/' component={ ProductList } ></Route>
-				<MyLayout></MyLayout>				
-			</Switch>
+			<Route forceRefresh={true}> 	
+				<Switch>
+					<Route path='/product/save/:productId?' component={ ProductSave } ></Route>
+					<Route path='/product/' component={ ProductList } ></Route>
+					<MyLayout></MyLayout>				
+				</Switch>
+			</Route>
 		)
 	}
 }

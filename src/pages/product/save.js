@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+
 //组件
 class NormalProductSave extends Component{
 
@@ -27,7 +28,7 @@ class NormalProductSave extends Component{
 		this.state={
 			productId:this.props.match.params.productId
 		}
-
+		console.log('save constructor....')
     }
 
 
@@ -35,18 +36,34 @@ class NormalProductSave extends Component{
     	if(this.state.productId){
     		this.props.getEditProduct(this.state.productId)
     	}
-    	
+    	console.log('save didMount....')
     }
 
     handleSubmit(e){
 	  	this.props.form.validateFields((err, values) => {//获取到前台输入的内容
 		    // console.log('values:::',values)
+		   	values.id=this.state.productId;
 			this.props.handleSubmitData(err,values)
 		})
 	}
 
-	render(){
-
+	render(){//渲染组件
+		const {
+			EditImage,
+			EditDescription,
+			EditDetail,
+			EditName,
+			EditPrice,
+			EditParentId,
+			EditSonId,
+			EditStock
+		}=this.props;
+		// console.log('g::::',EditImage)
+		let fileList=[];
+		if(EditImage){
+			fileList=EditImage.split(',')
+		}
+		console.log(fileList)
 		const { getFieldDecorator } = this.props.form;
 
 	    const formItemLayout = {
@@ -88,6 +105,7 @@ class NormalProductSave extends Component{
 				            rules: [{
 				              required: true, message: '请输入商品名称',
 				            }],
+				            initialValue: EditName 
 				          })(
 				            <Input 
 				            	style={{width:300}}
@@ -103,6 +121,7 @@ class NormalProductSave extends Component{
 				            rules: [{
 				              required: true, message: '请输入商品描述',
 				            }],
+				            initialValue: EditDescription
 				          })(
 				           	<Input 
 				            	placeholder='商品描述'
@@ -113,15 +132,18 @@ class NormalProductSave extends Component{
 			         	//所属分类,getCategoryId是子组件要改变父组件的值,需要父组件向子组件传一个函数
 			        }
 				        <FormItem
-				          {...formItemLayout}
-				          label="所属分类"
-				          required={true}
-				          validateStatus={ this.props.categoryValidateStatus }
-				          help={ this.props.categoryHelp }
+				          	{...formItemLayout}
+				          	label="所属分类"
+				          	required={true}
+				          	validateStatus={ this.props.categoryValidateStatus }
+				          	help={ this.props.categoryHelp }
 				        >
+				    	{/*将组件引入*/}
 				        <CategorySelector 
 				        	//getCategoryId是从子组件里面拿出来的数据
-				         	//由于子组件更改了父组件的数据,父组件需要向子组件传递一个函数
+				         	//由于子组件更改了父组件的数据,父组件需要向子组件传递一个函数				        	
+				        	EditParentId={ EditParentId }
+							EditSonId={ EditSonId }
 				        	getCategoryId={(parentId,sonId)=>{
 				        		// console.log(parentId,sonId)
 				        		this.props.getProductCategory(parentId,sonId)
@@ -136,6 +158,7 @@ class NormalProductSave extends Component{
 				            rules: [{
 				              required: true, message: '请输入商品价格',
 				            }],
+				            initialValue:EditPrice
 				          })(
 				           	<InputNumber 
 				           		initialValue={0}
@@ -153,6 +176,7 @@ class NormalProductSave extends Component{
 				            rules: [{
 				              required: true, message: '请输入商品库存',
 				            }],
+				            initialValue: EditStock
 				          })(
 				           	<InputNumber 
 				           		initialValue={0}
@@ -178,6 +202,8 @@ class NormalProductSave extends Component{
 				         			// console.log('save::::',Image)
 				         			this.props.getProductImage(Image);
 				         		}}
+				         		EditParentId={EditParentId}
+								EditSonId={EditSonId}
 				          	/>
 				        </FormItem>
 				        <FormItem
@@ -200,7 +226,7 @@ class NormalProductSave extends Component{
 				          		loading={this.props.isProductSubmitFetching}
 				          	>
 				          		提交
-				          	</Button>
+				          	</Button>	
 				        </FormItem>
 
 				    </Form>
@@ -216,6 +242,14 @@ const mapStateToProps=(state)=>{
 		isProductSubmitFetching:state.get('product').get('isProductSubmitFetching'),
 		categoryValidateStatus:state.get('product').get('categoryValidateStatus'),
 		categoryHelp:state.get('product').get('categoryHelp'),
+		EditImage:state.get('product').get('EditImage'),
+		EditDescription:state.get('product').get('EditDescription'),
+		EditDetail:state.get('product').get('EditDetail'),
+		EditName:state.get('product').get('EditName'),
+		EditPrice:state.get('product').get('EditPrice'),
+		EditParentId:state.get('product').get('EditParentId'),
+		EditSonId:state.get('product').get('EditSonId'),
+		EditStock:state.get('product').get('EditStock')
 	}
 }
 

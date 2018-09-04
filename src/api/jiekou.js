@@ -22,7 +22,7 @@ export const UPLOAD_IMAGE=SERVER+'product/uploadImage';
 //商品详情
 export const GET_IMAGE_URL=SERVER+'product/getImageUrl';
 //添加商品
-export const ADD_PRODUCTS=SERVER+'product';
+export const ADD_OR_EDIT_PRODUCTS=SERVER+'product';
 //获取商品
 export const GET_PRODUCTS=SERVER+'product';
 //更新排序

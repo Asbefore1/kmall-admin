@@ -26,7 +26,15 @@ const defaultState=fromJS({//相当于返回了一个map,map也就是immutable�
 	pageSize:0,
 	total:0,
 	list:[],//list是一个数组,也是immutable对象,
-	isPageFetching:false,	
+	isPageFetching:false,
+	EditImage:'',
+	EditDescription:'',
+	EditDetail:'',
+	EditName:'',
+	EditPrice:'',
+	EditParentId:'',
+	EditSonId:'',
+	EditStock:'',
 })
 
 
@@ -62,6 +70,7 @@ export default (state=defaultState,action)=>{
 			categoryHelp:'请选择所属分类'
 		})	
 	}
+	/*
 	if(action.type==types.GET_ALL_PRODUCT_DATA){
 		console.log('1:::',action.payload.list)
 		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
@@ -71,8 +80,20 @@ export default (state=defaultState,action)=>{
 			list:action.payload.list
 		})	
 	}
+	*/
 
-
+	if(action.type==types.SET_EDIT_PRODUCTS){
+		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
+			EditImage:action.payload.Image,
+			EditDescription:action.payload.description,
+			EditDetail:action.payload.detail,
+			EditName:action.payload.name,
+			EditPrice:action.payload.price,
+			EditParentId:action.payload.sonId.pid,
+			EditSonId:action.payload.sonId._id,
+			EditStock:action.payload.stock
+		})	
+	}
 
 
 
@@ -84,9 +105,6 @@ export default (state=defaultState,action)=>{
 	if(action.type==types.ADD_DONE){
 		return state.set('isAddFetching',false)
 	}
-	if(action.type==types.SET_LEVEL_ONE_CATEGORIES){
-		return state.set('levelOneCategories',fromJS(action.payload))
-	}
 
 	if(action.type==types.GET_PAGE_REQUEST){
 		return state.set('isPageFetching',true)
@@ -95,9 +113,6 @@ export default (state=defaultState,action)=>{
 		return state.set('isPageFetching',false)
 	}
 
-	if(action.type==types.HANDLE_CANCEL_MODAL){
-		return state.set('UpdateVisible',false)
-	}
 
 	if(action.type==types.SET_PAGE){
 		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
@@ -108,17 +123,7 @@ export default (state=defaultState,action)=>{
 		})
 	}
 
-	if(action.type==types.SHOW_UPDATE_MODAL){
-		return state.merge({//merge可以设置许多参数,可以设置成对象,set只能设置一个
-			UpdateVisible:true,
-			updateId:action.payload.updateId,
-			updateName:action.payload.updateName
-		})		
-	}
 
-	if(action.type==types.HANDLE_NEW_NAME){
-		return state.set('updateName',action.payload)
-	}
 
 	return state
 }
