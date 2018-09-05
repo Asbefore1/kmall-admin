@@ -101,7 +101,7 @@ export const handleSubmitDataAction=(err,values)=>{//向后台添加数据
 	    //新增商品
 	    let method='post';
 	    //编辑商品
-	    if(values.id){
+	    if(values.id){//如果传进来有id
 	    	method='put';
 	    }
 	    request({//点击提交发送ajax请求到服务器,去数据库里找对应的数据并返回

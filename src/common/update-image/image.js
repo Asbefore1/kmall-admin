@@ -14,14 +14,17 @@ class UpdateImage extends Component {
         this.handleCancel=this.handleCancel.bind(this);
         this.handleChange=this.handleChange.bind(this);
     }
-    // static getDerivedStateFromProps(props, state){
-    //     if(props.fileList.lenth>0 && state.fileList.length==0){
-    //         return{
-    //             fileList:props.fileList
-    //         }
-    //     }
-    //     return null;
-    // }
+    //回填图片
+    static getDerivedStateFromProps(props, state){
+        // console.log(props)
+        // console.log(state)
+        if(props.getFileList.length>0 && state.fileList.length==0){
+            return{
+                getFileList:props.getFileList
+            }
+        }
+        return null;
+    }
 
     handleCancel(){
         this.setState({ 

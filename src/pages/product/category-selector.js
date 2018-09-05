@@ -23,25 +23,24 @@ class CategorySelector extends Component{
 		}
 		this.ChangelevelOneCategories=this.ChangelevelOneCategories.bind(this);
 		this.ChangelevelTwoCategories=this.ChangelevelTwoCategories.bind(this);
-		console.log('selector constructor....')
+		// console.log('selector constructor....')
 	}
-
 	//在挂载完成后执行这个函数
 	componentDidMount(){//组件上的方法,不是this.props.loadlevelOneCategories()
 		this.loadlevelOneCategories();
-		console.log('selector componentDidMount....')	
+		// console.log('selector componentDidMount....')	
 	}
 
 	//用props去更新state,需要返回一个值(return一下),将返回的值和state里面的值做一个合并
 	static getDerivedStateFromProps(props, state){
-		console.log('props...',props)
-		console.log('state...',state)
+		// console.log('props...',props)
+		// console.log('state...',state)
 		
 		//props里面的父id和state里面的一级分类的id不相等时就改变
 		const levelOneCategoryIdChanged=props.EditParentId!=state.levelOneCategoryId;
 		const levelTwoCategoryIdChanged=props.EditSonId!=state.levelTwoCategoryId;
 		
-		//如果分类ID没有改变,就不更新state
+		//如果分类ID没有改变,就不更新state,不再往下走了
 		if(!levelOneCategoryIdChanged && !levelTwoCategoryIdChanged){
 			return null;
 		}
@@ -90,7 +89,7 @@ class CategorySelector extends Component{
 				pid:0
 			}
 		})
-		.then(result=>{
+		.then(result=>{//获取
 			if(result.code==0){
 				this.setState({
 					levelOneCategories:result.data
@@ -101,6 +100,7 @@ class CategorySelector extends Component{
 
 	//选择一级分类处理事件
 	ChangelevelOneCategories(value){
+		// console.log(value)//获取到一级分类的id
 		this.setState({
 			levelOneCategoryId:value,
 			levelTwoCategories:[],

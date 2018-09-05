@@ -28,7 +28,7 @@ class NormalProductSave extends Component{
 		this.state={
 			productId:this.props.match.params.productId
 		}
-		console.log('save constructor....')
+		// console.log('save constructor....')
     }
 
 
@@ -36,12 +36,13 @@ class NormalProductSave extends Component{
     	if(this.state.productId){
     		this.props.getEditProduct(this.state.productId)
     	}
-    	console.log('save didMount....')
+    	// console.log('save didMount....')
     }
 
     handleSubmit(e){
 	  	this.props.form.validateFields((err, values) => {//获取到前台输入的内容
 		    // console.log('values:::',values)
+		    //把提交做一下处理,什么时候是新增,什么时候是编辑
 		   	values.id=this.state.productId;
 			this.props.handleSubmitData(err,values)
 		})
@@ -60,10 +61,14 @@ class NormalProductSave extends Component{
 		}=this.props;
 		// console.log('g::::',EditImage)
 		let fileList=[];
-		if(EditImage){
-			fileList=EditImage.split(',')
+		if(EditImage){//把字符串转化成一个数组
+			fileList=EditImage.split(',').map((img,index)=>({
+				uid: index,
+			    status: 'done',
+			    url: img
+			}))
 		}
-		console.log(fileList)
+		// console.log(fileList)
 		const { getFieldDecorator } = this.props.form;
 
 	    const formItemLayout = {
